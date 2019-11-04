@@ -26,8 +26,19 @@ describe('calculateSquare with then method', function() {
     it('should resolve with number 4 if passed number 2', function () {
         return calculateSquare(2).then(
             result => {
-                expect(result).to.be.above(5);
+                expect(result).to.be.above(3);
                 expect(result).to.be.equal(4);
+            });
+    })
+});
+
+describe('calculateSquare with catch method', function () {
+    // This will also work. 
+    it('should resolve with number 4 if passed number 2', function () {
+        return calculateSquare('string').catch(
+            reason => {
+                expect(reason).to.not.equal(null);
+                expect(reason.message).to.equal('Argument of type number is expected');
             });
     })
 });
