@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Long Tasks</title>
+	<style>
+		#box {
+			background-color: green;
+			position: absolute;
+			top: 150px;
+			left: 400px;
+			width: 70px;
+			height: 70px;
+		}
+		#animation-button:active {
+			background-color: gray;
+		}
+		p {
+			margin: 0;
+		}
+		input {
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body>
+	<h3>Simple Animation Example</h3>
+	<div style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start">
+		<p>Please enter new coordinates for green box:</p>
+		<label>
+			<span>Target Left:</span>
+			<input type="text" id="left" value="700" />
+		</label>
+		<label>
+			<span>Target Top:</span>
+			<input type="text" id="top" value="150" />
+		</label>
+		<label>
+			<span>Duration:</span>
+			<input type="text" id="duration" value="1000" />
+		</label>
+		<button id="animation-button">Move the box</button>
+		
+		<div id="box"></div>
+	</div>
+	<script>
+		
+		function animateBox(targetLeft, targetTop, targetTimestamp, horizontalStep, verticalStep) {
+			const box = document.getElementById('box');
+			const currentCoords = box.getBoundingClientRect();
+			const currentTimestamp = new Date().getTime();
+			
+			if (currentTimestamp < targetTimestamp) {
+				box.style.left = currentCoords.left + horizontalStep + 'px';
+				box.style.top = currentCoords.top + verticalStep + 'px';
+				
+				requestAnimationFrame(
+					() => animateBox(targetLeft, targetTop, targetTimestamp, horizontalStep, verticalStep)
+				);
+			} else {
+				box.style.left = targetLeft + 'px';
+				box.style.top = targetTop + 'px';
+			}
+		}
+
+		function animationButtonClickHandler() {
+			const targetLeft = parseInt(document.getElementById('left').value);
+			const targetTop = parseInt(document.getElementById('top').value);
+			const duration = parseInt(document.getElementById('duration').value);
+
+			const box = document.getElementById('box');
+			const currentBoxCoords = box.getBoundingClientRect();
+			const horizontalDistance = targetLeft - currentBoxCoords.left;
+			const verticalDistance = targetTop - currentBoxCoords.top;
+			const quantityOfSteps = duration / 16;
+			const horizontalStep = horizontalDistance / quantityOfSteps;
+			const verticalStep = verticalDistance / quantityOfSteps;
+			
+			const currentTimestamp = new Date().getTime();
+			const targetTimestamp = currentTimestamp + duration;
+
+			animateBox(targetLeft, targetTop, targetTimestamp, horizontalStep, verticalStep);
+		}
+
+		document.getElementById('animation-button')
+			.addEventListener('click', animationButtonClickHandler);
+		
+	</script>
+</body>
+</html>

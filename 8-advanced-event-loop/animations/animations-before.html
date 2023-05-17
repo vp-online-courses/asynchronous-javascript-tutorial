@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Long Tasks</title>
+	<style>
+		#box {
+			background-color: green;
+			position: absolute;
+			top: 150px;
+			left: 400px;
+			width: 70px;
+			height: 70px;
+		}
+		#animation-button:active {
+			background-color: gray;
+		}
+		p {
+			margin: 0;
+		}
+		input {
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body>
+	<h3>Simple Animation Example</h3>
+	<div style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start">
+		<p>Please enter new coordinates for green box:</p>
+		<label>
+			<span>Target Left:</span>
+			<input type="text" id="left" value="700" />
+		</label>
+		<label>
+			<span>Target Top:</span>
+			<input type="text" id="top" value="150" />
+		</label>
+		<label>
+			<span>Duration:</span>
+			<input type="text" id="duration" value="1000" />
+		</label>
+		<button id="animation-button">Move the box</button>
+		
+		<div id="box"></div>
+	</div>
+	<script>
+
+		function animationButtonClickHandler() {
+			// Add code here
+			animateBox(targetLeft, targetTop, targetTimestamp, horizontalStep, verticalStep);
+		}
+
+		document.getElementById('animation-button')
+			.addEventListener('click', animationButtonClickHandler);
+		
+	</script>
+</body>
+</html>

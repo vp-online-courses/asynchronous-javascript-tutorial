@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Long Tasks</title>
+	<style>
+		#straightforward-solution:active {
+			background-color: gray;
+		}
+		#optimized-solution:active {
+			background-color: gray;
+		}
+		#microtask-solution:active {
+			background-color: gray;
+		}
+	</style>
+</head>
+<body>
+	<h3>How Long Tasks Affect User Experience</h3>
+	<div style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start">
+		<div id="progress"></div>
+		<button id="straightforward-solution">Straightforward solution</button>
+		<button id="optimized-solution">Optimized solution</button>
+		<button id="microtask-solution">Microtask solution</button>
+		
+		<textarea rows="10" cols="50">Lorem ipsum dolor sit amet</textarea>
+	</div>
+	<script>
+		const element = document.getElementById('progress');
+		const MAX_NUMBER = 17654321;
+
+		function generateNumbers() {
+			const arrayOfNumbers = [];
+			for (let i = 1; i <= MAX_NUMBER; i++) {
+				arrayOfNumbers.push(i);
+			}
+			return arrayOfNumbers;
+		}
+		
+		function straightforwardSolution () {
+			// straightforward solution here
+			let arrayOfNumbers = generateNumbers();
+			const squareRoots = [];
+			arrayOfNumbers.forEach(number => {
+				const sqRoot = Math.sqrt(number);
+				squareRoots.push(sqRoot);
+				const numbersLeft = MAX_NUMBER - number;
+				element.textContent = numbersLeft + ' items left to process';
+			})
+		}
+
+		function optimizedSolution () {
+			// optimized solution here
+			let arrayOfNumbers = generateNumbers();
+			const squareRoots = [];
+
+			function processBatch() {
+				const BATCH_SIZE = 50000;
+				const batch = arrayOfNumbers.slice(0, BATCH_SIZE);
+				arrayOfNumbers = arrayOfNumbers.slice(BATCH_SIZE);
+				batch.forEach(number => {
+					const sqRoot = Math.sqrt(number);
+					squareRoots.push(sqRoot);
+					const numbersLeft = MAX_NUMBER - number;
+					element.textContent = numbersLeft + ' items left to process';
+				});	
+				if (arrayOfNumbers.length > 0) {
+					setTimeout(processBatch, 0);
+				}
+			}
+
+			setTimeout(processBatch, 0);
+		}
+
+		function microtaskSolution () {
+			// microtask solution here
+			let arrayOfNumbers = generateNumbers();
+			const squareRoots = [];
+
+			function processBatch() {
+				const BATCH_SIZE = 50000;
+				const batch = arrayOfNumbers.slice(0, BATCH_SIZE);
+				arrayOfNumbers = arrayOfNumbers.slice(BATCH_SIZE);
+				batch.forEach(number => {
+					const sqRoot = Math.sqrt(number);
+					squareRoots.push(sqRoot);
+					const numbersLeft = MAX_NUMBER - number;
+					element.textContent = numbersLeft + ' items left to process';
+				});	
+				if (arrayOfNumbers.length > 0) {
+					Promise.resolve()
+						.then(processBatch);
+				}
+			}
+
+			Promise.resolve()
+				.then(processBatch);
+		}
+
+		document.getElementById('straightforward-solution')
+			.addEventListener('click', straightforwardSolution);
+		document.getElementById('optimized-solution')
+			.addEventListener('click', optimizedSolution);
+		document.getElementById('microtask-solution')
+			.addEventListener('click', microtaskSolution);
+	</script>
+</body>
+</html>
